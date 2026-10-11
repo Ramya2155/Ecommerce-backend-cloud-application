@@ -3,6 +3,7 @@ package com.example.Ecommerce.Project.controller;
 import com.example.Ecommerce.Project.entity.Product;
 import com.example.Ecommerce.Project.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +22,16 @@ public class ProductController {
         return productService.getAllProducts(page, size);
     }
 
+
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
     }
 
     @GetMapping("/search")
